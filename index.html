@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Semanal de Produção</title>
+    <!-- Adiciona o Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Adiciona a fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .report-section {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 1rem;
+            background-color: #2563eb;
+            transition: width 0.5s ease-in-out;
+        }
+        @media print {
+            body {
+                background-color: #ffffff;
+            }
+            .no-print {
+                display: none;
+            }
+            .report-section {
+                box-shadow: none;
+                border: 1px solid #e5e7eb;
+            }
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <!-- Cabeçalho do Relatório -->
+    <div class="text-center mb-8 no-print">
+        <h1 class="text-3xl font-bold text-gray-800">Gerador de Relatório Semanal de Produção</h1>
+        <p class="text-gray-600 mt-2">Preencha as informações e imprima seu relatório.</p>
+    </div>
+
+    <!-- Container do Relatório -->
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Relatório Semanal de Produção</h2>
+            <p class="text-lg text-gray-500">
+                Semana de <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___ / ___</span> a <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___ / ___</span>
+            </p>
+        </div>
+
+        <!-- Seção 1: Resumo Executivo -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">1. Resumo Executivo</h3>
+            <p class="text-gray-700 mb-2">
+                <strong>Produção total da semana:</strong> <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span> unidades.
+            </p>
+            <p class="text-gray-700 mb-2">
+                <strong>Eficiência média (OEE):</strong> <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span> %.
+            </p>
+            <p class="text-gray-700 mb-2">
+                <strong>Tempo total de máquina rodando:</strong> <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span> h.
+            </p>
+            <p class="text-gray-700 mb-2">
+                <strong>Tempo total de máquina parada:</strong> <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span> h.
+            </p>
+            <p class="text-gray-700 mb-2">
+                <strong>Turno de maior produtividade:</strong> <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span>.
+            </p>
+            <p class="text-gray-700">
+                <strong>Turno com mais perdas:</strong> <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span>.
+            </p>
+        </div>
+
+        <!-- Seção 2: Principais Problemas da Semana -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">2. Principais Problemas da Semana</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li>
+                    <strong class="text-gray-700">Top 3 motivos de parada:</strong>
+                    <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                        <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span> - <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span>%</li>
+                        <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span> - <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span>%</li>
+                        <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span> - <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span>%</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong class="text-gray-700">Top 3 causas de refugo/qualidade:</strong>
+                    <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                        <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span></li>
+                        <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span></li>
+                        <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span></li>
+                    </ul>
+                </li>
+                <li>
+                    <strong class="text-gray-700">Máquina(s) com maior índice de indisponibilidade:</strong> <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">___</span>.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Seção 3: Tendências e Comparações -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">3. Tendências e Comparações</h3>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <strong class="text-gray-700">Produção total:</strong>
+                    <span contenteditable="true" class="underline decoration-dashed decoration-gray-400 data-value" data-label="Produção">___</span> %
+                    <span class="change-indicator" data-value="0"></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <strong class="text-gray-700">OEE:</strong>
+                    <span contenteditable="true" class="underline decoration-dashed decoration-gray-400 data-value" data-label="OEE">___</span> p.p.
+                    <span class="change-indicator" data-value="0"></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <strong class="text-gray-700">Tempo parado:</strong>
+                    <span contenteditable="true" class="underline decoration-dashed decoration-gray-400 data-value" data-label="Tempo parado">___</span> h
+                    <span class="change-indicator" data-value="0"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 4: Alertas e Recomendações -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">4. Alertas e Recomendações</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Exemplo: "O turno C apresentou 35% mais paradas por falta de operador em relação aos outros turnos → verificar escala."</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Exemplo: "Máquina 2 concentrou 40% do tempo parado da semana → sugerir manutenção preventiva."</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Exemplo: "Produção caiu 10% em relação à média mensal → avaliar se houve aumento de trocas de molde."</span></li>
+            </ul>
+        </div>
+
+        <!-- Seção 5: Próximos Passos / Ações Sugeridas -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">5. Próximos Passos / Ações Sugeridas</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Revisar [X] motivo de parada.</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Manutenção preventiva em [máquina Y].</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Treinamento/ajuste no [turno Z].</span></li>
+            </ul>
+        </div>
+
+        <!-- Botão de impressão -->
+        <div class="text-center no-print mt-8">
+            <button onclick="window.print()" class="bg-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
+                Imprimir Relatório
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Adiciona um listener para atualizar a cor e o ícone ao editar os valores
+        document.querySelectorAll('.data-value').forEach(span => {
+            span.addEventListener('input', () => {
+                updateIndicator(span);
+            });
+            // Atualiza o indicador ao carregar a página com o valor inicial (se houver)
+            updateIndicator(span);
+        });
+
+        // Função para atualizar o indicador de tendência
+        function updateIndicator(element) {
+            // Remove o texto e os espaços extras
+            const valueString = element.textContent.replace(/\s/g, '').replace('%', '').replace('p.p.', '');
+            const value = parseFloat(valueString);
+            const indicator = element.nextElementSibling;
+            
+            if (isNaN(value)) {
+                indicator.innerHTML = '';
+                return;
+            }
+
+            let icon = '';
+            let colorClass = '';
+
+            // A lógica para a cor e ícone depende do dado
+            if (element.getAttribute('data-label') === 'Produção' || element.getAttribute('data-label') === 'OEE') {
+                if (value > 0) {
+                    icon = '▲'; // Seta para cima
+                    colorClass = 'text-green-600';
+                } else if (value < 0) {
+                    icon = '▼'; // Seta para baixo
+                    colorClass = 'text-red-600';
+                } else {
+                    icon = '—'; // Traço
+                    colorClass = 'text-gray-500';
+                }
+            } else if (element.getAttribute('data-label') === 'Tempo parado') {
+                if (value > 0) {
+                    icon = '▲'; // Seta para cima (parada é ruim, então vermelho)
+                    colorClass = 'text-red-600';
+                } else if (value < 0) {
+                    icon = '▼'; // Seta para baixo (menos parada é bom, então verde)
+                    colorClass = 'text-green-600';
+                } else {
+                    icon = '—'; // Traço
+                    colorClass = 'text-gray-500';
+                }
+            }
+
+            indicator.innerHTML = `<span class="font-bold text-xl ${colorClass}">${icon}</span>`;
+        }
+
+        // Configura a data atual ao carregar a página
+        window.onload = function() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+
+            document.querySelector('.text-lg.text-gray-500 span:first-child').textContent = `${day}/${month}`;
+            document.querySelector('.text-lg.text-gray-500 span:last-child').textContent = `${day}/${month}`;
+        };
+    </script>
+</body>
+</html>
