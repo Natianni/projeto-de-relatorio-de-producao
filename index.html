@@ -37,6 +37,7 @@
             color: #6b7280;
             font-style: italic;
         }
+
         @media print {
             body {
                 background-color: #ffffff;
@@ -74,7 +75,7 @@
             <p class="text-gray-600 mb-4 text-sm leading-relaxed">
                 Esta seção oferece uma visão geral e rápida do desempenho da produção na semana. As métricas destacadas abaixo são essenciais para entender a saúde operacional das máquinas e o volume de produção alcançado.
             </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 <div class="p-4 bg-gray-50 rounded-lg">
                     <p class="text-gray-700 font-semibold">Produção total da semana das máquinas:</p>
                     <p class="text-2xl font-bold text-blue-800 mt-1" contenteditable="true">25.500 unidades</p>
@@ -101,7 +102,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Seção 2: Principais Problemas da Semana -->
         <div class="report-section">
             <h3 class="text-xl font-bold text-blue-600 mb-4">2. Principais Problemas da Semana</h3>
@@ -113,26 +114,26 @@
             <div class="space-y-4 mb-6">
                 <!-- Problema 1 -->
                 <div>
-                    <p class="text-gray-800 font-medium">1. Falta de matéria-prima <span class="text-red-600 font-bold">(35%)</span></p>
+                    <p class="text-gray-800 font-medium">1. Falta de matéria-prima <span class="text-red-600 font-bold" contenteditable="true" data-bar-target="bar-prod1">(35%)</span></p>
                     <p class="text-gray-500 text-sm mb-1">Impacto: Parada inesperada que afeta múltiplos turnos. Causa principal: Atraso na entrega de insumos.</p>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 35%;"></div>
+                        <div id="bar-prod1" class="progress-bar" style="width: 35%;"></div>
                     </div>
                 </div>
                 <!-- Problema 2 -->
                 <div>
-                    <p class="text-gray-800 font-medium">2. Manutenção não programada <span class="text-red-600 font-bold">(25%)</span></p>
+                    <p class="text-gray-800 font-medium">2. Manutenção não programada <span class="text-red-600 font-bold" contenteditable="true" data-bar-target="bar-prod2">(25%)</span></p>
                     <p class="text-gray-500 text-sm mb-1">Impacto: Maior tempo de inatividade da Máquina 2. Causa principal: Falha de componente em bomba de ar.</p>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 25%;"></div>
+                        <div id="bar-prod2" class="progress-bar" style="width: 25%;"></div>
                     </div>
                 </div>
                 <!-- Problema 3 -->
                 <div>
-                    <p class="text-gray-800 font-medium">3. Falta de operador <span class="text-red-600 font-bold">(15%)</span></p>
+                    <p class="text-gray-800 font-medium">3. Falta de operador <span class="text-red-600 font-bold" contenteditable="true" data-bar-target="bar-prod3">(15%)</span></p>
                     <p class="text-gray-500 text-sm mb-1">Impacto: Ocorrências concentradas no Turno C. Causa principal: Problema na escala de folgas da equipe.</p>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 15%;"></div>
+                        <div id="bar-prod3" class="progress-bar" style="width: 15%;"></div>
                     </div>
                 </div>
             </div>
@@ -215,9 +216,17 @@
             updateIndicator(span);
         });
 
-        // Função para atualizar o indicador de tendência
+        // Adiciona a funcionalidade para atualizar as barras de progresso dinamicamente
+        document.querySelectorAll('[data-bar-target]').forEach(span => {
+            span.addEventListener('input', () => {
+                updateProgressBar(span);
+            });
+            // Atualiza a barra de progresso ao carregar a página
+            updateProgressBar(span);
+        });
+        
+        // Função para atualizar o indicador de tendência (setas)
         function updateIndicator(element) {
-            // Remove o texto e os espaços extras
             const valueString = element.textContent.replace(/\s/g, '').replace('%', '').replace('p.p.', '');
             const value = parseFloat(valueString);
             const indicator = element.nextElementSibling;
@@ -230,44 +239,58 @@
             let icon = '';
             let colorClass = '';
 
-            // A lógica para a cor e ícone depende do dado
             if (element.getAttribute('data-label') === 'Produção' || element.getAttribute('data-label') === 'OEE') {
                 if (value > 0) {
-                    icon = '▲'; // Seta para cima
+                    icon = '▲'; 
                     colorClass = 'text-green-600';
                 } else if (value < 0) {
-                    icon = '▼'; // Seta para baixo
+                    icon = '▼'; 
                     colorClass = 'text-red-600';
                 } else {
-                    icon = '—'; // Traço
+                    icon = '—';
                     colorClass = 'text-gray-500';
                 }
             } else if (element.getAttribute('data-label') === 'Tempo parado') {
                 if (value > 0) {
-                    icon = '▲'; // Seta para cima (parada é ruim, então vermelho)
+                    icon = '▲'; 
                     colorClass = 'text-red-600';
                 } else if (value < 0) {
-                    icon = '▼'; // Seta para baixo (menos parada é bom, então verde)
+                    icon = '▼'; 
                     colorClass = 'text-green-600';
                 } else {
-                    icon = '—'; // Traço
+                    icon = '—';
                     colorClass = 'text-gray-500';
                 }
             }
 
             indicator.innerHTML = `<span class="font-bold text-xl ${colorClass}">${icon}</span>`;
         }
+        
+        // Função para atualizar a largura da barra de progresso
+        function updateProgressBar(element) {
+            // Extrai o valor numérico do texto (ex: "(35%)" -> 35)
+            const valueString = element.textContent.match(/\d+/);
+            const value = valueString ? parseFloat(valueString[0]) : 0;
+            const barId = element.getAttribute('data-bar-target');
+            const bar = document.getElementById(barId);
 
-        // Configura a data atual ao carregar a página
+            if (bar) {
+                // Limita o valor entre 0 e 100 para evitar barras muito longas
+                const width = Math.min(Math.max(value, 0), 100);
+                bar.style.width = `${width}%`;
+            }
+        }
+        
+        // Configura a data atual e o gráfico ao carregar a página
         window.onload = function() {
             const today = new Date();
             const day = String(today.getDate()).padStart(2, '0');
             const month = String(today.getMonth() + 1).padStart(2, '0');
             
             const startDate = new Date(today);
-            startDate.setDate(today.getDate() - today.getDay() + 1); // Dia 1 da semana (segunda)
+            startDate.setDate(today.getDate() - today.getDay() + 1);
             const endDate = new Date(today);
-            endDate.setDate(today.getDate() - today.getDay() + 7); // Dia 7 da semana (domingo)
+            endDate.setDate(today.getDate() - today.getDay() + 7);
 
             const startDay = String(startDate.getDate()).padStart(2, '0');
             const startMonth = String(startDate.getMonth() + 1).padStart(2, '0');
@@ -276,6 +299,317 @@
 
             document.querySelector('.text-lg.text-gray-500 span:first-child').textContent = `${startDay}/${startMonth}`;
             document.querySelector('.text-lg.text-gray-500 span:last-child').textContent = `${endDay}/${endMonth}`;
+            
+            // Atualiza todos os gráficos ao carregar a página
+            document.querySelectorAll('[data-bar-target]').forEach(updateProgressBar);
+        };
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Semanal de Produção</title>
+    <!-- Adiciona o Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Adiciona a fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .report-section {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 1rem;
+            background-color: #ef4444; /* Cor para motivos de parada, simulando alerta */
+            transition: width 0.5s ease-in-out;
+        }
+        .text-placeholder {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff;
+            }
+            .no-print {
+                display: none;
+            }
+            .report-section {
+                box-shadow: none;
+                border: 1px solid #e5e7eb;
+            }
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <!-- Cabeçalho do Relatório -->
+    <div class="text-center mb-8 no-print">
+        <h1 class="text-3xl font-bold text-gray-800">Gerador de Relatório Semanal de Produção</h1>
+        <p class="text-gray-600 mt-2">Preencha as informações e imprima seu relatório para a liderança.</p>
+    </div>
+
+    <!-- Container do Relatório -->
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Relatório Semanal de Produção</h2>
+            <p class="text-lg text-gray-500">
+                Semana de <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">10/06</span> a <span contenteditable="true" class="underline decoration-dashed decoration-gray-400">16/06</span>
+            </p>
+        </div>
+
+        <!-- Seção 1: Resumo Executivo -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">1. Resumo Executivo</h3>
+            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                Esta seção oferece uma visão geral e rápida do desempenho da produção na semana. As métricas destacadas abaixo são essenciais para entender a saúde operacional das máquinas e o volume de produção alcançado.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-700 font-semibold">Produção total da semana das máquinas:</p>
+                    <p class="text-2xl font-bold text-blue-800 mt-1" contenteditable="true">25.500 unidades</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-700 font-semibold">Eficiência média (OEE):</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1" contenteditable="true">85%</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-700 font-semibold">Tempo total de máquina parada:</p>
+                    <p class="text-2xl font-bold text-red-600 mt-1" contenteditable="true">21,5 h</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-700 font-semibold">Turno de maior produtividade:</p>
+                    <p class="text-2xl font-bold text-blue-800 mt-1" contenteditable="true">Turno B</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-700 font-semibold">Turno com mais perdas:</p>
+                    <p class="text-2xl font-bold text-red-600 mt-1" contenteditable="true">Turno C</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-700 font-semibold">Tempo total de máquina rodando:</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1" contenteditable="true">120 h</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção 2: Principais Problemas da Semana -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">2. Principais Problemas da Semana</h3>
+            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                Esta seção detalha os principais gargalos que impactaram o desempenho da fábrica na semana. Identificar a causa raiz desses problemas é o primeiro passo para o planejamento de melhorias.
+            </p>
+            
+            <h4 class="font-semibold text-gray-700 mb-2">Top 3 motivos de parada:</h4>
+            <div class="space-y-4 mb-6">
+                <!-- Problema 1 -->
+                <div>
+                    <p class="text-gray-800 font-medium">1. Falta de matéria-prima <span class="text-red-600 font-bold" contenteditable="true" data-bar-target="bar-prod1">(35%)</span></p>
+                    <p class="text-gray-500 text-sm mb-1">Impacto: Parada inesperada que afeta múltiplos turnos. Causa principal: Atraso na entrega de insumos.</p>
+                    <div class="progress-bar-container">
+                        <div id="bar-prod1" class="progress-bar" style="width: 35%;"></div>
+                    </div>
+                </div>
+                <!-- Problema 2 -->
+                <div>
+                    <p class="text-gray-800 font-medium">2. Manutenção não programada <span class="text-red-600 font-bold" contenteditable="true" data-bar-target="bar-prod2">(25%)</span></p>
+                    <p class="text-gray-500 text-sm mb-1">Impacto: Maior tempo de inatividade da Máquina 2. Causa principal: Falha de componente em bomba de ar.</p>
+                    <div class="progress-bar-container">
+                        <div id="bar-prod2" class="progress-bar" style="width: 25%;"></div>
+                    </div>
+                </div>
+                <!-- Problema 3 -->
+                <div>
+                    <p class="text-gray-800 font-medium">3. Falta de operador <span class="text-red-600 font-bold" contenteditable="true" data-bar-target="bar-prod3">(15%)</span></p>
+                    <p class="text-gray-500 text-sm mb-1">Impacto: Ocorrências concentradas no Turno C. Causa principal: Problema na escala de folgas da equipe.</p>
+                    <div class="progress-bar-container">
+                        <div id="bar-prod3" class="progress-bar" style="width: 15%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="font-semibold text-gray-700 mb-2">Top 3 causas de refugo/qualidade:</h4>
+            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li><strong class="font-medium">Vazamentos na solda:</strong> Falha recorrente em embalagens de 1L, ligada à calibração da solda.</li>
+                <li><strong class="font-medium">Quebras durante o sopro:</strong> Maior incidência na Máquina 3, sinalizando possível instabilidade na pressão.</li>
+                <li><strong class="font-medium">Rebarbas excessivas:</strong> Problema concentrado na Máquina 1, indicando desgaste do molde ou ajuste incorreto.</li>
+            </ul>
+        </div>
+
+        <!-- Seção 3: Tendências e Comparações -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">3. Tendências e Comparações</h3>
+            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                Comparar o desempenho atual com a semana anterior nos ajuda a entender se as ações de melhoria estão funcionando. As setas indicam a tendência (para cima = melhoria, para baixo = piora).
+            </p>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <strong class="text-gray-700">Produção total:</strong>
+                    <span contenteditable="true" class="underline decoration-dashed decoration-gray-400 data-value" data-label="Produção">+5</span> %
+                    <span class="change-indicator" data-value="0"></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <strong class="text-gray-700">OEE:</strong>
+                    <span contenteditable="true" class="underline decoration-dashed decoration-gray-400 data-value" data-label="OEE">+2</span> p.p.
+                    <span class="change-indicator" data-value="0"></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <strong class="text-gray-700">Tempo parado:</strong>
+                    <span contenteditable="true" class="underline decoration-dashed decoration-gray-400 data-value" data-label="Tempo parado">-15</span> %
+                    <span class="change-indicator" data-value="0"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 4: Alertas e Recomendações -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">4. Alertas e Recomendações</h3>
+            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                Esta é a parte mais importante do relatório, onde os dados se transformam em insights acionáveis. Apresenta situações de risco ou pontos de atenção que exigem uma resposta imediata ou um acompanhamento de perto.
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400"><strong>Alerta:</strong> A produção caiu 10% em relação à média mensal. É crucial avaliar se houve aumento na frequência de trocas de molde.</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400"><strong>Recomendação:</strong> O Turno C apresentou 35% mais paradas por falta de operador. Sugere-se uma revisão imediata na escala da equipe para evitar repetição.</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400"><strong>Foco:</strong> A Máquina 2 concentrou 40% do tempo de inatividade da semana. Uma manutenção preventiva detalhada é sugerida para identificar e corrigir a causa-raiz das falhas.</span></li>
+            </ul>
+        </div>
+
+        <!-- Seção 5: Próximos Passos / Ações Sugeridas -->
+        <div class="report-section">
+            <h3 class="text-xl font-bold text-blue-600 mb-4">5. Próximos Passos / Ações Sugeridas</h3>
+            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                Com base nos problemas e alertas identificados, esta seção propõe as ações prioritárias para a próxima semana.
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Revisar o motivo de parada "Falta de matéria-prima" com o setor de logística.</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Realizar manutenção corretiva e preventiva na Máquina 2 no próximo período de parada programada.</span></li>
+                <li><span contenteditable="true" class="underline decoration-dashed decoration-gray-400">Agendar um treinamento de calibração para o Turno C, focado em reduzir refugos por rebarbas.</span></li>
+            </ul>
+        </div>
+
+        <!-- Botão de impressão -->
+        <div class="text-center no-print mt-8">
+            <button onclick="window.print()" class="bg-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
+                Imprimir Relatório
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Adiciona um listener para atualizar a cor e o ícone ao editar os valores
+        document.querySelectorAll('.data-value').forEach(span => {
+            span.addEventListener('input', () => {
+                updateIndicator(span);
+            });
+            // Atualiza o indicador ao carregar a página com o valor inicial (se houver)
+            updateIndicator(span);
+        });
+
+        // Adiciona a funcionalidade para atualizar as barras de progresso dinamicamente
+        document.querySelectorAll('[data-bar-target]').forEach(span => {
+            span.addEventListener('input', () => {
+                updateProgressBar(span);
+            });
+            // Atualiza a barra de progresso ao carregar a página
+            updateProgressBar(span);
+        });
+        
+        // Função para atualizar o indicador de tendência (setas)
+        function updateIndicator(element) {
+            const valueString = element.textContent.replace(/\s/g, '').replace('%', '').replace('p.p.', '');
+            const value = parseFloat(valueString);
+            const indicator = element.nextElementSibling;
+            
+            if (isNaN(value)) {
+                indicator.innerHTML = '';
+                return;
+            }
+
+            let icon = '';
+            let colorClass = '';
+
+            if (element.getAttribute('data-label') === 'Produção' || element.getAttribute('data-label') === 'OEE') {
+                if (value > 0) {
+                    icon = '▲'; 
+                    colorClass = 'text-green-600';
+                } else if (value < 0) {
+                    icon = '▼'; 
+                    colorClass = 'text-red-600';
+                } else {
+                    icon = '—';
+                    colorClass = 'text-gray-500';
+                }
+            } else if (element.getAttribute('data-label') === 'Tempo parado') {
+                if (value > 0) {
+                    icon = '▲'; 
+                    colorClass = 'text-red-600';
+                } else if (value < 0) {
+                    icon = '▼'; 
+                    colorClass = 'text-green-600';
+                } else {
+                    icon = '—';
+                    colorClass = 'text-gray-500';
+                }
+            }
+
+            indicator.innerHTML = `<span class="font-bold text-xl ${colorClass}">${icon}</span>`;
+        }
+        
+        // Função para atualizar a largura da barra de progresso
+        function updateProgressBar(element) {
+            // Extrai o valor numérico do texto (ex: "(35%)" -> 35)
+            const valueString = element.textContent.match(/\d+/);
+            const value = valueString ? parseFloat(valueString[0]) : 0;
+            const barId = element.getAttribute('data-bar-target');
+            const bar = document.getElementById(barId);
+
+            if (bar) {
+                // Limita o valor entre 0 e 100 para evitar barras muito longas
+                const width = Math.min(Math.max(value, 0), 100);
+                bar.style.width = `${width}%`;
+            }
+        }
+        
+        // Configura a data atual e o gráfico ao carregar a página
+        window.onload = function() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - today.getDay() + 1);
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() - today.getDay() + 7);
+
+            const startDay = String(startDate.getDate()).padStart(2, '0');
+            const startMonth = String(startDate.getMonth() + 1).padStart(2, '0');
+            const endDay = String(endDate.getDate()).padStart(2, '0');
+            const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
+
+            document.querySelector('.text-lg.text-gray-500 span:first-child').textContent = `${startDay}/${startMonth}`;
+            document.querySelector('.text-lg.text-gray-500 span:last-child').textContent = `${endDay}/${endMonth}`;
+            
+            // Atualiza todos os gráficos ao carregar a página
+            document.querySelectorAll('[data-bar-target]').forEach(updateProgressBar);
         };
     </script>
 </body>
